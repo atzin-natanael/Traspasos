@@ -13,13 +13,10 @@ using ApiBas = ApisMicrosip.ApiMspBasicaExt;
 using ApiInv = ApisMicrosip.ApiMspInventExt;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using SpreadsheetLight;
-using DocumentFormat.OpenXml.Bibliography;
 using System.CodeDom.Compiler;
-using DocumentFormat.OpenXml.Wordprocessing;
-using DocumentFormat.OpenXml.Drawing.Charts;
-using DocumentFormat.OpenXml.Drawing.Diagrams;
 using System.Reflection;
+using System.Security.Policy;
+using ClosedXML.Excel;
 
 namespace Pantalla_De_Control
 {
@@ -54,19 +51,22 @@ namespace Pantalla_De_Control
 
             string filePath = "\\\\SRVPRINCIPAL\\clavesSurtido\\Claves.xlsx";
             // string filePath = "C:\\clavesSurtido\\Claves.xlsx";
-            using (SLDocument documento = new SLDocument(filePath))
+            using (var workbook = new XLWorkbook(filePath))
             {
-                int filas = documento.GetWorksheetStatistics().NumberOfRows;
+                // Seleccionar la primera hoja del archivo
+                var worksheet = workbook.Worksheet(1);
+                int filas = worksheet.LastRowUsed().RowNumber();
                 for (int i = 2; i < filas + 1; ++i)
                 {
-                    string temp_name = documento.GetCellValueAsString("A" + i);
-                    string temp_value = documento.GetCellValueAsString("B" + i);
-                    string temp_status = documento.GetCellValueAsString("C" + i);
+                    string temp_name = worksheet.Row(i).Cell(1).Value.ToString();
+                    string temp_value = worksheet.Row(i).Cell(2).Value.ToString();
+                    string temp_status = worksheet.Row(i).Cell(3).Value.ToString();
+
                     string name = temp_name + " " + temp_value;
+
                     nombresArray.Add(name);
                     nombresValor.Add(temp_status);
                 }
-                documento.CloseWithoutSaving();
             }
             Cb_Surtidor.DataSource = nombresArray;
             Cb_Surtidor.AutoCompleteMode = AutoCompleteMode.Append;
@@ -83,8 +83,11 @@ namespace Pantalla_De_Control
             //Objeto transaccion
             //TrnHandle
             GlobalSettings.Instance.Trn = ApiBas.NewTrn(GlobalSettings.Instance.Bd, 3);
-            string path = "192.168.0.11:D:\\Microsip datos\\PAPELERIA CORIBA CORNEJO.fdb";
-            int conecta = ApiBas.DBConnect(GlobalSettings.Instance.Bd, path, "SYSDBA", "C0r1b423");
+            //string path = "192.168.0.11:D:\\Microsip datos\\PAPELERIA CORIBA CORNEJO.fdb";
+            string path = "C:\\Microsip datos\\PAPELERIA CORIBA CORNEJO.fdb";
+
+            //int conecta = ApiBas.DBConnect(GlobalSettings.Instance.Bd, path, "SYSDBA", "C0r1b423");
+            int conecta = ApiBas.DBConnect(GlobalSettings.Instance.Bd, path, "SYSDBA", "masterkey");
             StringBuilder obtieneError = new StringBuilder(1000);
             int codigoError = ApiBas.GetLastErrorMessage(obtieneError);
             String mensajeError = codigoError.ToString();
@@ -484,11 +487,11 @@ namespace Pantalla_De_Control
                 }
                 DateTime fecha = DateTime.Now;
                 //int ErrorFolio = ApiVe.NuevoPedido(Fecha, "IP", int.Parse(Cliente_Id), Dir_Consig_Id, Almacen_Id,"", Tipo_Desc,Descuento,"",Descripcion,Vendedor_Id, 0, 0, Moneda_Id);
-                int ErrorFolio2 =  ApiInv.NuevaEntrada(1490318, 108403, fecha.ToString(), "", Pedido.Text + " Realizado por: " + Cb_Surtidor.Text,0);
+                int ErrorFolio2 =  ApiInv.NuevaEntrada(1490318, 108403, fecha.ToString(), "", Pedido.Text + " Realizado por: " + Cb_Surtidor.Text + "\n Autorizado por: "+ GlobalSettings.Instance.Usuario,0);
                 for (int i = 0; i < mensaje.GridExistencia.Rows.Count; ++i)
                 {
                     int articulo_id = Art_Id(mensaje.GridExistencia.Rows[i].Cells[0].Value.ToString());
-                    int Renglon = ApiInv.RenglonEntrada(articulo_id, double.Parse(Grid.Rows[i].Cells[3].Value.ToString()), 0,0);
+                    int Renglon = ApiInv.RenglonEntrada(articulo_id, double.Parse(mensaje.GridExistencia.Rows[i].Cells[3].Value.ToString()), 0,0);
                 }
                 int final = ApiInv.AplicaEntrada();
                 MessageBox.Show("Entrada éxitosa");

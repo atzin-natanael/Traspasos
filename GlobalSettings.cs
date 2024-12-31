@@ -28,6 +28,7 @@ namespace Pantalla_De_Control
         public int originalWidth {  get; set; }
         public int originalHeight { get; set; }
         public Size originalSize { get; set; }
+        public string Usuario { get; set; }
         private GlobalSettings()
         {
             Config = new List<string>();
