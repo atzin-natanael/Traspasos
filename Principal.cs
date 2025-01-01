@@ -359,6 +359,12 @@ namespace Pantalla_De_Control
             else
             {
                 MessageBox.Show("Completa todos los campos", "¡Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if(Pedido.Text == string.Empty)
+                    Pedido.Focus();
+                else if (Cb_Surtidor.Text == string.Empty)
+                    Cb_Surtidor.Focus();
+                else
+                    Codigo.Focus();
             }
         }
 
@@ -371,10 +377,9 @@ namespace Pantalla_De_Control
                 con.Open();
                 FbCommand command = new FbCommand("EXIVAL_ART", con);
                 command.CommandType = CommandType.StoredProcedure;
-
-                // Parámetros de entrada
                 command.Parameters.Add("V_ARTICULO_ID", FbDbType.Integer).Value = articulo_id;
-                command.Parameters.Add("V_ALMACEN_ID", FbDbType.Integer).Value = 108403;
+                command.Parameters.Add("V_ALMACEN_ID", FbDbType.Integer).Value = 108401; //ALMACEN
+                //command.Parameters.Add("V_ALMACEN_ID", FbDbType.Integer).Value = 108405; culiacan
                 command.Parameters.Add("V_FECHA", FbDbType.Date).Value = DateTime.Today;
                 command.Parameters.Add("V_ES_ULTIMO_COSTO", FbDbType.Char).Value = 'S';
                 command.Parameters.Add("V_SUCURSAL_ID", FbDbType.Integer).Value = 0;
@@ -388,11 +393,10 @@ namespace Pantalla_De_Control
                 command.Parameters.Add(paramEXISTENCIA);
                 // Ejecutar el procedimiento almacenado
                 command.ExecuteNonQuery();
-                int Existencia = Convert.ToInt32(command.Parameters[6].Value);
+                GlobalSettings.Instance.ExistenciaAl = Convert.ToInt32(command.Parameters[6].Value);
 
                 FbCommand command2 = new FbCommand("EXIVAL_ART", con);
                 command2.CommandType = CommandType.StoredProcedure;
-
                 // Parámetros de entrada
                 command2.Parameters.Add("V_ARTICULO_ID", FbDbType.Integer).Value = articulo_id;
                 command2.Parameters.Add("V_ALMACEN_ID", FbDbType.Integer).Value = 108403; //PERI
@@ -467,7 +471,9 @@ namespace Pantalla_De_Control
                 GlobalSettings.Instance.Id = 0;
                 Codigo.Text = string.Empty;
                 Pedido.Enabled = true;
+                Agregar_Pedido.BackColor = System.Drawing.Color.Black;
                 Agregar_Pedido.Enabled = true;
+                Agregar_Pedido.Text = "Agregar";
                 Pedido.Text = string.Empty;
                 Pedido.Focus();
                 RestoreOriginalSize();
@@ -509,6 +515,11 @@ namespace Pantalla_De_Control
             if (Cb_Surtidor.Text == string.Empty)
             {
                 MessageBox.Show("Te falta asignar un surtidor", "¡Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            DialogResult result = MessageBox.Show("¿Estás seguro que deseas realizar el traspaso?\n Revisa bien las cantidades \n ¿Deseas continuar?", "Advertencia", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+            if (result == DialogResult.Cancel)
+            {
                 return;
             }
             int conecta = ConectaBD();
@@ -629,6 +640,15 @@ namespace Pantalla_De_Control
                     numpad.Cantidad.Select(0, numpad.Cantidad.TextLength);
                     numpad.Cantidad.Focus();
                 }
+                else if (Grid.CurrentCell.RowIndex >= 0 && Grid.CurrentCell.ColumnIndex == 1)
+                {
+                    int codigo = int.Parse(Grid.CurrentRow.Cells[1].Value.ToString());
+                    int Articulo = Art_Id(codigo.ToString());
+                    decimal Ex = Existencia(Articulo.ToString());
+                    Mensajes mensajes = new Mensajes();
+                    mensajes.Texto.Text = "Existencia Almacén: " + GlobalSettings.Instance.ExistenciaAl.ToString() + "\n Existencia Tienda: " + Ex.ToString();
+                    mensajes.ShowDialog();
+                }
             }
             
         }
@@ -743,7 +763,9 @@ namespace Pantalla_De_Control
                         GlobalSettings.Instance.Renglones.Add(renglon);
                     }
                     reader2.Close();
+                    Agregar_Pedido.BackColor = System.Drawing.Color.SteelBlue;
                     Pedido.Enabled = false;
+                    Agregar_Pedido.Text = "Listo";
                     Agregar_Pedido.Enabled = false;
                     Cb_Surtidor.Focus();
                 }
@@ -805,6 +827,22 @@ namespace Pantalla_De_Control
             GlobalSettings.Instance.originalHeight = this.Height;
             GlobalSettings.Instance.originalSize = this.Size;
             this.WindowState = FormWindowState.Maximized;
+        }
+
+        private void Grid_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.F9)
+            {
+                if (Grid.CurrentRow != null)
+                {
+                    int codigo = int.Parse(Grid.CurrentRow.Cells[1].Value.ToString());
+                    int Articulo = Art_Id(codigo.ToString());   
+                    decimal Ex = Existencia(Articulo.ToString());
+                    Mensajes mensajes = new Mensajes();
+                    mensajes.Texto.Text = "Existencia Almacén: " + GlobalSettings.Instance.ExistenciaAl.ToString() + "\n Existencia Tienda: " + Ex.ToString();
+                    mensajes.ShowDialog();
+                }
+            }
         }
     }
 }

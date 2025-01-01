@@ -21,6 +21,7 @@ namespace Pantalla_De_Control
         public List<List<string>> Renglones {  get; set; }
         public int Bd { get; set; }
         public int Id { get; set; }
+        public decimal ExistenciaAl { get; set; }
         public int Index { get; set; }
         public int identificador { get; set; }
         public int Trn { get; set; }
