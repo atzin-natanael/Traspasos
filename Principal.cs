@@ -17,6 +17,7 @@ using System.CodeDom.Compiler;
 using System.Reflection;
 using System.Security.Policy;
 using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Office2010.ExcelAc;
 
 namespace Pantalla_De_Control
 {
@@ -440,8 +441,13 @@ namespace Pantalla_De_Control
             int ErrorFolio = ApiInv.NuevaSalida(36, 108403, 108401, fecha.ToString(), "", Pedido.Text + " Realizado por: " + Cb_Surtidor.Text, 0);
             for (int i = 0; i < Grid.Rows.Count; ++i)
             {
+                List<string> Articulos = new List<string>();
                 int articulo_id = Art_Id(Grid.Rows[i].Cells[1].Value.ToString());
                 int Renglon = ApiInv.RenglonSalida(articulo_id, double.Parse(Grid.Rows[i].Cells[3].Value.ToString()), 0, 0);
+                Articulos.Add(Grid.Rows[i].Cells[1].Value.ToString());
+                Articulos.Add(Grid.Rows[i].Cells[2].Value.ToString());
+                Articulos.Add(Grid.Rows[i].Cells[3].Value.ToString());
+                GlobalSettings.Instance.ListaArt.Add(Articulos);
             }
             int final = ApiInv.AplicaSalida();
             if (final == 3)
@@ -471,6 +477,12 @@ namespace Pantalla_De_Control
                 mensajecu.Texto.Text = "Salida con éxito";
                 mensajecu.ShowDialog();
                 ApiBas.DBDisconnect(GlobalSettings.Instance.Bd);
+                printDocument1.Print();
+                if (printDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    printDocument1.Print();
+                    GlobalSettings .Instance.ListaArt.Clear();
+                }
                 Grid.Rows.Clear();
                 GlobalSettings.Instance.posicion = 0;
                 GlobalSettings.Instance.Id = 0;
@@ -849,6 +861,57 @@ namespace Pantalla_De_Control
                     mensajes.Texto.Text = "Existencia Almacén: " + GlobalSettings.Instance.ExistenciaAl.ToString() + "\n Existencia Tienda: " + Ex.ToString();
                     mensajes.ShowDialog();
                 }
+            }
+        }
+
+        private void printDocument1_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
+        {
+            using (Font font = new Font("Arial", 12, FontStyle.Bold))
+            {
+                e.Graphics.DrawString("TRASPASO A ALMACÉN", font, Brushes.Black, new PointF(40,0));
+
+            }
+            using (Font font = new Font("Arial", 20, FontStyle.Bold))
+            {
+                e.Graphics.DrawString(Pedido.Text, font, Brushes.Black, new PointF(90, 50));
+
+            }
+            using (Font font = new Font("Arial", 10, FontStyle.Bold))
+            {
+                e.Graphics.DrawString(DateTime.Now.ToString(" yyyy-MM-dd"), font, Brushes.Black, new PointF(200, 40));
+
+            }
+            Image originalImage = Image.FromFile("C:\\Img\\logo.jpg");
+            Image resizedImage = new Bitmap(originalImage, new Size(50, 30));
+            e.Graphics.DrawImage(resizedImage, new PointF(0, 40));
+            int j = 90;
+            for (int i = 0; i < GlobalSettings.Instance.ListaArt.Count; ++i)
+            {
+                using (Font font = new Font("Arial", 10, FontStyle.Bold))
+                {
+                    if (i > 0)
+                        e.Graphics.DrawString("_____________________________________________________________", font, Brushes.Black, new PointF(0, j - 25));
+                    e.Graphics.DrawString(GlobalSettings.Instance.ListaArt[i][0], font, Brushes.Black, new PointF(0, j));
+                    if (GlobalSettings.Instance.ListaArt[i][2].ToString().Length > 3)
+                        e.Graphics.DrawString(GlobalSettings.Instance.ListaArt[i][2].ToString(), font, Brushes.Black, new PointF(252, j));
+                    else
+                        e.Graphics.DrawString(GlobalSettings.Instance.ListaArt[i][2].ToString(), font, Brushes.Black, new PointF(260, j));
+
+                }
+
+                Rectangle DestinationRectangle = new Rectangle(51, j, 220, 50);
+                using (StringFormat sf = new StringFormat())
+                {
+                    e.Graphics.DrawString(GlobalSettings.Instance.ListaArt[i][1], new Font("Arial", 8, FontStyle.Regular), Brushes.Black, DestinationRectangle, sf);
+                }
+
+                j += 50;
+            }
+            using (Font font = new Font("Arial", 10, FontStyle.Bold))
+            {
+                e.Graphics.DrawString("                      ___________  ", font, Brushes.Black, new PointF(0, j + 50));
+                e.Graphics.DrawString("                        Recibió    ", font, Brushes.Black, new PointF(0, j + 70));
+
             }
         }
     }

@@ -18,7 +18,8 @@ namespace Pantalla_De_Control
         public string Pw { get; set; }
         public string Ruta { get; set; }
         public List<string> Config { get; set; }
-        public List<List<string>> Renglones {  get; set; }
+        public List<List<string>> Renglones { get; set; }
+        public List<List<string>> ListaArt { get; set; }
         public int Bd { get; set; }
         public int Id { get; set; }
         public decimal ExistenciaAl { get; set; }
@@ -35,6 +36,7 @@ namespace Pantalla_De_Control
             Config = new List<string>();
 
             Renglones = new List<List<string>>();
+            ListaArt = new List<List<string>>();
 
         }
         public static GlobalSettings Instance
