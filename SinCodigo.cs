@@ -37,7 +37,7 @@ namespace Pantalla_De_Control
             Cb4.Items.Clear();
             Cb5.Items.Clear();
             Cb1.Visible = false;
-            Pb1.Image = Image.FromFile("C:\\Img\\imprenta.png");
+            Pb1.Image = Image.FromFile("C:\\Img\\imprenta.jpg");
             Lb1.Text = "Papel Imprenta";
             Lb2.Text = "Papel Manila";
             Pb2.Image = Image.FromFile("C:\\Img\\manila.jpg");
@@ -123,7 +123,7 @@ namespace Pantalla_De_Control
             Cb3.Items.Add("100 X 50");
             Cb3.Items.Add("100 X 100");
             Lb4.Text = "Pelotas";
-            Pb4.Image = Image.FromFile("C:\\Img\\pelotas.png");
+            Pb4.Image = Image.FromFile("C:\\Img\\pelotas.jpg");
             Cb4.Items.Add("Elegir modelo:");
             Cb4.Items.Add("DECORADA");
             Cb4.Items.Add("HEAVY METAL");

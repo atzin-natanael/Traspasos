@@ -70,8 +70,16 @@ namespace Pantalla_De_Control
 
         private void OK_Click(object sender, EventArgs e)
         {
-            EnviarVariableEvent2(decimal.Parse(Cantidad.Text));
-            this.Close();
+            if(Cantidad.Text != string.Empty && Cantidad.Text != "0"){
+                EnviarVariableEvent2(decimal.Parse(Cantidad.Text));
+                this.Close();
+            
+            }
+            else{
+                MessageBox.Show("Ingrese una cantidad valida");
+                Cantidad.Focus();
+                Cantidad.Select(0, Cantidad.TextLength);
+            }
         }
 
         private void N0_Click(object sender, EventArgs e)

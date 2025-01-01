@@ -487,7 +487,7 @@ namespace Pantalla_De_Control
                 }
                 DateTime fecha = DateTime.Now;
                 //int ErrorFolio = ApiVe.NuevoPedido(Fecha, "IP", int.Parse(Cliente_Id), Dir_Consig_Id, Almacen_Id,"", Tipo_Desc,Descuento,"",Descripcion,Vendedor_Id, 0, 0, Moneda_Id);
-                int ErrorFolio2 =  ApiInv.NuevaEntrada(1490318, 108403, fecha.ToString(), "", Pedido.Text + " Realizado por: " + Cb_Surtidor.Text + "\n Autorizado por: "+ GlobalSettings.Instance.Usuario,0);
+                int ErrorFolio2 =  ApiInv.NuevaEntrada(1490318, 108403, fecha.ToString(), "", Pedido.Text + " Realizado por: " + Cb_Surtidor.Text + "\nAutorizado por: "+ GlobalSettings.Instance.Usuario,0);
                 for (int i = 0; i < mensaje.GridExistencia.Rows.Count; ++i)
                 {
                     int articulo_id = Art_Id(mensaje.GridExistencia.Rows[i].Cells[0].Value.ToString());
@@ -600,33 +600,37 @@ namespace Pantalla_De_Control
 
         private void Grid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if(Grid.CurrentCell.RowIndex >= 0 && Grid.CurrentCell.ColumnIndex == 4)
+            if(Grid.CurrentCell != null)
             {
-                DialogResult result = MessageBox.Show("¿Estás seguro que deseas eliminar este artículo?\n ¿Deseas continuar?", "Advertencia", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
-                if (result == DialogResult.Cancel)
+                if (Grid.CurrentCell.RowIndex >= 0 && Grid.CurrentCell.ColumnIndex == 4)
                 {
-                    Codigo.Focus();
-                    Codigo.Select(0, Codigo.Text.Length);
-                    return;
+                    DialogResult result = MessageBox.Show("¿Estás seguro que deseas eliminar este artículo?\n ¿Deseas continuar?", "Advertencia", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+                    if (result == DialogResult.Cancel)
+                    {
+                        Codigo.Focus();
+                        Codigo.Select(0, Codigo.Text.Length);
+                        return;
+                    }
+                    else
+                    {
+                        Grid.Rows.RemoveAt(Grid.CurrentCell.RowIndex);
+                        Grid.CurrentCell = null;
+                        Grid.Height -= 50;
+                        Codigo.Select(0, Codigo.TextLength);
+                        Codigo.Focus();
+                    }
                 }
-                else
+                else if (Grid.CurrentCell.RowIndex >= 0 && Grid.CurrentCell.ColumnIndex == 3)
                 {
-                    Grid.Rows.RemoveAt(Grid.CurrentCell.RowIndex);
-                    Grid.CurrentCell = null;
-                    Grid.Height -= 50;
-                    Codigo.Select(0, Codigo.TextLength);
-                    Codigo.Focus();
+                    Numpad numpad = new Numpad();
+                    GlobalSettings.Instance.identificador = int.Parse(Grid.Rows[Grid.CurrentCell.RowIndex].Cells[0].Value.ToString());
+                    numpad.EnviarVariableEvent2 += new Numpad.EnviarVariableDelegate2(ejecutar);
+                    numpad.Show();
+                    numpad.Cantidad.Select(0, numpad.Cantidad.TextLength);
+                    numpad.Cantidad.Focus();
                 }
             }
-            else if( Grid.CurrentCell.RowIndex >= 0 && Grid.CurrentCell.ColumnIndex == 3)
-            {
-                Numpad numpad = new Numpad();
-                GlobalSettings.Instance.identificador =  int.Parse(Grid.Rows[Grid.CurrentCell.RowIndex].Cells[0].Value.ToString());
-                numpad.EnviarVariableEvent2 += new Numpad.EnviarVariableDelegate2(ejecutar);
-                numpad.Show();
-                numpad.Cantidad.Select(0, numpad.Cantidad.TextLength);
-                numpad.Cantidad.Focus();
-            }
+            
         }
         public void ejecutar(decimal unidad)
         {

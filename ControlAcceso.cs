@@ -31,7 +31,7 @@ namespace Pantalla_De_Control
             if (TxtContrasenia.Text != string.Empty)
             {
 
-                using (var db = new LiteDatabase("C:\\ConfigDB\\USUARIOS_TRASPASOS.db"))
+                using (var db = new LiteDatabase("\\\\192.168.0.2\\ConfigDB\\USUARIOS_TRASPASOS.db"))
                 {
                     //    // Obtener la colección (equivalente a una tabla en SQL)
                     //    var usuarios = db.GetCollection<Usuario>("USUARIOS");
