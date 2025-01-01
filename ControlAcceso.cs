@@ -66,7 +66,6 @@ namespace Pantalla_De_Control
                         // Comprobar si la contraseña coincide
                         if (usuario.Password == TxtContrasenia.Text)
                         {
-                            MessageBox.Show($"Autorizado por: {usuario.UsuarioName}");
                             this.Close();
                             GlobalSettings.Instance.aceptado = true;
                             GlobalSettings.Instance.Usuario = usuario.UsuarioName;

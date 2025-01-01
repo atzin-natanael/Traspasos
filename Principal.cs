@@ -237,7 +237,7 @@ namespace Pantalla_De_Control
                     int cantidad = 0;
                     int clave_principal = 0;
                     string articulo_id = "";
-                    bool paquetes = false ,No_incluido = false, repetido = false, excedente = false , completo = false, inicio = false;
+                    bool paquetes = false ,No_incluido = false, repetido = false, excedente = false , completo = false, inicio = false, incompleto = false;
                     if (reader.Read())
                     {
                         articulo_id = reader.GetString(2);
@@ -301,11 +301,13 @@ namespace Pantalla_De_Control
                                 }
                             decimal suma = cantidad + ant_cant;
                             if(suma > piezas_pedido) {
-                                excedente = true;
+                                    excedente = true;
                             }
                             else if(suma == piezas_pedido) {
-                                completo = true;
+                                    completo = true;
                             }
+                            else
+                                incompleto = true;
                             }
                             Grid.Rows[i].Cells[3].Value = cantidad + ant_cant;
                         }
@@ -339,6 +341,8 @@ namespace Pantalla_De_Control
                             Grid.Rows[index].DefaultCellStyle.BackColor = System.Drawing.Color.Tomato;
                     if (completo)
                         Grid.Rows[index].DefaultCellStyle.BackColor = System.Drawing.Color.LightGreen;
+                    if (incompleto)
+                        Grid.Rows[index].DefaultCellStyle.BackColor = System.Drawing.Color.LightBlue;
                     if (excedente)
                         Grid.Rows[index].DefaultCellStyle.BackColor = System.Drawing.Color.Orange;
                     Grid.Rows[Grid.Rows.Count - 1].Height = 50;
@@ -459,12 +463,13 @@ namespace Pantalla_De_Control
                 }
                 ApiBas.DBDisconnect(GlobalSettings.Instance.Bd);
                 mensaje.EnviarVariableEvent4 += new MessageBoxCustom.EnviarVariableDelegate4(ajuste);
-                
                 mensaje.ShowDialog();
             }
             else if( final == 0)
             {
-                MessageBox.Show("Salida con éxito");
+                Mensajes mensajecu = new Mensajes();
+                mensajecu.Texto.Text = "Salida con éxito";
+                mensajecu.ShowDialog();
                 ApiBas.DBDisconnect(GlobalSettings.Instance.Bd);
                 Grid.Rows.Clear();
                 GlobalSettings.Instance.posicion = 0;
@@ -476,7 +481,7 @@ namespace Pantalla_De_Control
                 Agregar_Pedido.Text = "Agregar";
                 Pedido.Text = string.Empty;
                 Pedido.Focus();
-                RestoreOriginalSize();
+                //RestoreOriginalSize();
             }
         }
         public void ajuste()
@@ -500,7 +505,9 @@ namespace Pantalla_De_Control
                     int Renglon = ApiInv.RenglonEntrada(articulo_id, double.Parse(mensaje.GridExistencia.Rows[i].Cells[3].Value.ToString()), 0,0);
                 }
                 int final = ApiInv.AplicaEntrada();
-                MessageBox.Show("Entrada éxitosa");
+                Mensajes mensajesc = new Mensajes();
+                mensajesc.Texto.Text = "Entrada con éxito"+ "\n Autorizada por: "+GlobalSettings.Instance.Usuario;
+                mensajesc.ShowDialog();
                 GlobalSettings.Instance.aceptado = false;
                 Traspaso();
             }
@@ -536,9 +543,9 @@ namespace Pantalla_De_Control
         }
         private void RestoreOriginalSize()
         {
-            this.Width = GlobalSettings.Instance.originalWidth;
-            this.Height = GlobalSettings.Instance.originalHeight;
-            this.Size = GlobalSettings.Instance.originalSize;
+            //this.Width = GlobalSettings.Instance.originalWidth;
+            //this.Height = GlobalSettings.Instance.originalHeight;
+            //this.Size = GlobalSettings.Instance.originalSize;
         }
         private void Principal_MouseMove(object sender, MouseEventArgs e)
         {
@@ -690,7 +697,7 @@ namespace Pantalla_De_Control
                         if (paquete)
                             Grid.Rows[i].DefaultCellStyle.BackColor = System.Drawing.Color.Orchid;
                         else
-                            Grid.Rows[i].DefaultCellStyle.BackColor = System.Drawing.Color.White;
+                            Grid.Rows[i].DefaultCellStyle.BackColor = System.Drawing.Color.LightBlue;
                     }
                     break;
 
@@ -823,10 +830,10 @@ namespace Pantalla_De_Control
 
         private void Principal_Load(object sender, EventArgs e)
         {
-            GlobalSettings.Instance.originalWidth = this.Width;
-            GlobalSettings.Instance.originalHeight = this.Height;
-            GlobalSettings.Instance.originalSize = this.Size;
-            this.WindowState = FormWindowState.Maximized;
+            //GlobalSettings.Instance.originalWidth = this.Width;
+            //GlobalSettings.Instance.originalHeight = this.Height;
+            //GlobalSettings.Instance.originalSize = this.Size;
+            //this.WindowState = FormWindowState.Maximized;
         }
 
         private void Grid_KeyDown(object sender, KeyEventArgs e)

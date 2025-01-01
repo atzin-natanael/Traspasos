@@ -56,10 +56,10 @@
             this.Texto.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Texto.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Texto.ForeColor = System.Drawing.SystemColors.Control;
-            this.Texto.Location = new System.Drawing.Point(85, 40);
+            this.Texto.Location = new System.Drawing.Point(96, 40);
             this.Texto.Name = "Texto";
             this.Texto.Size = new System.Drawing.Size(66, 24);
-            this.Texto.TabIndex = 1;
+            this.Texto.TabIndex = 0;
             this.Texto.Text = "label1";
             this.Texto.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -73,21 +73,21 @@
             this.Close.Location = new System.Drawing.Point(357, 2);
             this.Close.Name = "Close";
             this.Close.Size = new System.Drawing.Size(47, 35);
-            this.Close.TabIndex = 2;
+            this.Close.TabIndex = 0;
             this.Close.Text = "X";
             this.Close.UseVisualStyleBackColor = false;
             this.Close.Click += new System.EventHandler(this.Close_Click);
             // 
             // panel1
             // 
-            this.panel1.BackColor = System.Drawing.Color.Silver;
+            this.panel1.BackColor = System.Drawing.Color.Black;
             this.panel1.Controls.Add(this.Close);
             this.panel1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(404, 37);
-            this.panel1.TabIndex = 3;
+            this.panel1.TabIndex = 0;
             this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
             // 
             // Mensajes
@@ -103,6 +103,7 @@
             this.Name = "Mensajes";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Mensajes";
+            this.Load += new System.EventHandler(this.Mensajes_Load);
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
