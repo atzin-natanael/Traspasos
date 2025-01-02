@@ -84,11 +84,11 @@ namespace Pantalla_De_Control
             //Objeto transaccion
             //TrnHandle
             GlobalSettings.Instance.Trn = ApiBas.NewTrn(GlobalSettings.Instance.Bd, 3);
-            //string path = "192.168.0.11:D:\\Microsip datos\\PAPELERIA CORIBA CORNEJO.fdb";
-            string path = "C:\\Microsip datos\\PAPELERIA CORIBA CORNEJO.fdb";
+            string path = "192.168.0.11:D:\\Microsip datos\\PAPELERIA CORIBA CORNEJO.fdb";
+            //string path = "C:\\Microsip datos\\PAPELERIA CORIBA CORNEJO.fdb";
 
             //int conecta = ApiBas.DBConnect(GlobalSettings.Instance.Bd, path, "SYSDBA", "C0r1b423");
-            int conecta = ApiBas.DBConnect(GlobalSettings.Instance.Bd, path, "SYSDBA", "masterkey");
+            int conecta = ApiBas.DBConnect(GlobalSettings.Instance.Bd, path, "SYSDBA", "C0r1b423");
             StringBuilder obtieneError = new StringBuilder(1000);
             int codigoError = ApiBas.GetLastErrorMessage(obtieneError);
             String mensajeError = codigoError.ToString();
