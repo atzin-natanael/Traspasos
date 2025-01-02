@@ -439,6 +439,7 @@ namespace Pantalla_De_Control
             DateTime fecha = DateTime.Now;
             //int ErrorFolio = ApiVe.NuevoPedido(Fecha, "IP", int.Parse(Cliente_Id), Dir_Consig_Id, Almacen_Id,"", Tipo_Desc,Descuento,"",Descripcion,Vendedor_Id, 0, 0, Moneda_Id);
             int ErrorFolio = ApiInv.NuevaSalida(36, 108403, 108401, fecha.ToString(), "", Pedido.Text + " Realizado por: " + Cb_Surtidor.Text, 0);
+            GlobalSettings.Instance.ListaArt.Clear();
             for (int i = 0; i < Grid.Rows.Count; ++i)
             {
                 List<string> Articulos = new List<string>();
@@ -481,8 +482,8 @@ namespace Pantalla_De_Control
                 if (printDialog1.ShowDialog() == DialogResult.OK)
                 {
                     printDocument1.Print();
-                    GlobalSettings .Instance.ListaArt.Clear();
                 }
+
                 Grid.Rows.Clear();
                 GlobalSettings.Instance.posicion = 0;
                 GlobalSettings.Instance.Id = 0;
@@ -491,6 +492,7 @@ namespace Pantalla_De_Control
                 Agregar_Pedido.BackColor = System.Drawing.Color.Black;
                 Agregar_Pedido.Enabled = true;
                 Agregar_Pedido.Text = "Agregar";
+                GlobalSettings.Instance.Renglones.Clear();
                 Pedido.Text = string.Empty;
                 Pedido.Focus();
                 //RestoreOriginalSize();
@@ -655,7 +657,7 @@ namespace Pantalla_De_Control
                     Numpad numpad = new Numpad();
                     GlobalSettings.Instance.identificador = int.Parse(Grid.Rows[Grid.CurrentCell.RowIndex].Cells[0].Value.ToString());
                     numpad.EnviarVariableEvent2 += new Numpad.EnviarVariableDelegate2(ejecutar);
-                    numpad.Show();
+                    numpad.ShowDialog();
                     numpad.Cantidad.Select(0, numpad.Cantidad.TextLength);
                     numpad.Cantidad.Focus();
                 }
@@ -668,6 +670,9 @@ namespace Pantalla_De_Control
                     mensajes.Texto.Text = "Existencia Almacén: " + GlobalSettings.Instance.ExistenciaAl.ToString() + "\n Existencia Tienda: " + Ex.ToString();
                     mensajes.ShowDialog();
                 }
+                Codigo.Focus();
+                Codigo.Select(0, Codigo.Text.Length);
+                Grid.CurrentCell = null;
             }
             
         }
@@ -911,6 +916,7 @@ namespace Pantalla_De_Control
             {
                 e.Graphics.DrawString("                      ___________  ", font, Brushes.Black, new PointF(0, j + 50));
                 e.Graphics.DrawString("                        Recibió    ", font, Brushes.Black, new PointF(0, j + 70));
+                e.Graphics.DrawString("Hecho por: "+Cb_Surtidor.Text, font, Brushes.Black, new PointF(0, j + 90));
 
             }
         }
