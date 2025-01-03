@@ -94,5 +94,11 @@ namespace Pantalla_De_Control
                 OK.Focus();
             }
         }
+
+        private void Numpad_Load(object sender, EventArgs e)
+        {
+            Cantidad.Focus();
+            Cantidad.Select(0, Cantidad.TextLength);
+        }
     }
 }

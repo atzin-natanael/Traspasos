@@ -87,8 +87,8 @@ namespace Pantalla_De_Control
             string path = "192.168.0.11:D:\\Microsip datos\\PAPELERIA CORIBA CORNEJO.fdb";
             //string path = "C:\\Microsip datos\\PAPELERIA CORIBA CORNEJO.fdb";
 
-            //int conecta = ApiBas.DBConnect(GlobalSettings.Instance.Bd, path, "SYSDBA", "C0r1b423");
             int conecta = ApiBas.DBConnect(GlobalSettings.Instance.Bd, path, "SYSDBA", "C0r1b423");
+            //int conecta = ApiBas.DBConnect(GlobalSettings.Instance.Bd, path, "SYSDBA", "masterkey");
             StringBuilder obtieneError = new StringBuilder(1000);
             int codigoError = ApiBas.GetLastErrorMessage(obtieneError);
             String mensajeError = codigoError.ToString();
@@ -479,10 +479,10 @@ namespace Pantalla_De_Control
                 mensajecu.ShowDialog();
                 ApiBas.DBDisconnect(GlobalSettings.Instance.Bd);
                 printDocument1.Print();
-                if (printDialog1.ShowDialog() == DialogResult.OK)
-                {
-                    printDocument1.Print();
-                }
+                //if (printDialog1.ShowDialog() == DialogResult.OK)
+                //{
+                //    printDocument1.Print();
+                //}
 
                 Grid.Rows.Clear();
                 GlobalSettings.Instance.posicion = 0;
@@ -646,8 +646,9 @@ namespace Pantalla_De_Control
                     else
                     {
                         Grid.Rows.RemoveAt(Grid.CurrentCell.RowIndex);
-                        Grid.CurrentCell = null;
-                        Grid.Height -= 50;
+                        //Grid.CurrentCell = null;
+                        Grid.ClearSelection();
+                        //Grid.Height -= 50;
                         Codigo.Select(0, Codigo.TextLength);
                         Codigo.Focus();
                     }
@@ -658,8 +659,8 @@ namespace Pantalla_De_Control
                     GlobalSettings.Instance.identificador = int.Parse(Grid.Rows[Grid.CurrentCell.RowIndex].Cells[0].Value.ToString());
                     numpad.EnviarVariableEvent2 += new Numpad.EnviarVariableDelegate2(ejecutar);
                     numpad.ShowDialog();
-                    numpad.Cantidad.Select(0, numpad.Cantidad.TextLength);
                     numpad.Cantidad.Focus();
+                    numpad.Cantidad.Select(0, numpad.Cantidad.TextLength);
                 }
                 else if (Grid.CurrentCell.RowIndex >= 0 && Grid.CurrentCell.ColumnIndex == 1)
                 {
@@ -672,7 +673,8 @@ namespace Pantalla_De_Control
                 }
                 Codigo.Focus();
                 Codigo.Select(0, Codigo.Text.Length);
-                Grid.CurrentCell = null;
+                Grid.ClearSelection();
+                //Grid.CurrentCell = null;
             }
             
         }
@@ -722,7 +724,8 @@ namespace Pantalla_De_Control
             }
             Codigo.Focus();
             Codigo.Select(0, Codigo.Text.Length);
-            Grid.CurrentCell = null;
+            //Grid.CurrentCell = null;
+            Grid.ClearSelection();
         }
 
         private void Agregar_Pedido_Click(object sender, EventArgs e)

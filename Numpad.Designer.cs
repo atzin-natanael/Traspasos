@@ -272,6 +272,7 @@
             this.Name = "Numpad";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Numpad";
+            this.Load += new System.EventHandler(this.Numpad_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
