@@ -42,8 +42,32 @@ namespace Pantalla_De_Control
             Cb_Surtidor.DropDownHeight = 250;
             Pedido.Focus();
             Pedido.Select();
+            CargarExcel();
         
         }
+        public void CargarExcel()
+        {
+            string filePath = "\\\\SRVPRINCIPAL\\clavesSurtido\\Picking Almacen.xlsx";
+           //string filePath = "C:\\clavesSurtido\\Claves.xlsx";
+            using (var workbook = new XLWorkbook(filePath))
+            {
+                // Seleccionar la primera hoja del archivo
+                var worksheet = workbook.Worksheet(1);
+                int filas = worksheet.LastRowUsed().RowNumber();
+                //List<List<string>> Picking = new List<List<string>>();
+                for (int i = 2; i < filas + 1; ++i)
+                {
+                    List<string> temp = new List<string>();
+                    temp.Add(worksheet.Row(i).Cell(1).Value.ToString());
+                    temp.Add(worksheet.Row(i).Cell(4).Value.ToString());
+                    temp.Add(worksheet.Row(i).Cell(6).Value.ToString());
+                    GlobalSettings.Instance.Picking.Add(temp);
+                }
+            }
+
+
+        }
+            //Cb_Empacador.Text = "";
         public void Leer_Datos()
         {
             nombresArray.Clear();
@@ -84,10 +108,10 @@ namespace Pantalla_De_Control
             //Objeto transaccion
             //TrnHandle
             GlobalSettings.Instance.Trn = ApiBas.NewTrn(GlobalSettings.Instance.Bd, 3);
-            string path = "192.168.0.11:D:\\Microsip datos\\PAPELERIA CORIBA CORNEJO.fdb";
-            //string path = "C:\\Microsip datos\\PAPELERIA CORIBA CORNEJO.fdb";
+            //string path = "192.168.0.11:D:\\Microsip datos\\PAPELERIA CORIBA CORNEJO.fdb";
+            string path = "C:\\Microsip datos\\PAPELERIA CORIBA CORNEJO.fdb";
 
-            int conecta = ApiBas.DBConnect(GlobalSettings.Instance.Bd, path, "SYSDBA", "C0r1b423");
+            int conecta = ApiBas.DBConnect(GlobalSettings.Instance.Bd, path, "SYSDBA", "masterkey");
             //int conecta = ApiBas.DBConnect(GlobalSettings.Instance.Bd, path, "SYSDBA", "masterkey");
             StringBuilder obtieneError = new StringBuilder(1000);
             int codigoError = ApiBas.GetLastErrorMessage(obtieneError);
@@ -526,6 +550,22 @@ namespace Pantalla_De_Control
                 Traspaso();
             }
         }
+        public void ValidaExcel()
+        {
+            for(int i = 0; i < Grid.Rows.Count; i++)
+            {
+                foreach (var sublista in GlobalSettings.Instance.Picking)
+                {
+                    // Verificar si la sublista contiene el valor que buscas
+                    if (sublista.Contains(Grid.Rows[i].Cells[1].Value.ToString()))
+                    {
+                        int art_id = Art_Id(Grid.Rows[i].Cells[1].Value.ToString());
+                        decimal existencia = Existencia(art_id.ToString()); 
+                        MessageBox.Show("Este artículo no se puede surtir " + Grid.Rows[i].Cells[1].Value + "\nEstá en: "+ sublista[1] + "\nExistencia Almacén: " + existencia, "¡Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }   
+        }
         private void Generar_Click(object sender, EventArgs e)
         {
             if (Grid.Rows.Count == 0)
@@ -538,6 +578,7 @@ namespace Pantalla_De_Control
                 MessageBox.Show("Te falta asignar un surtidor", "¡Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            ValidaExcel();
             DialogResult result = MessageBox.Show("¿Estás seguro que deseas realizar el traspaso?\n Revisa bien las cantidades \n ¿Deseas continuar?", "Advertencia", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
             if (result == DialogResult.Cancel)
             {
