@@ -19,6 +19,8 @@ namespace Pantalla_De_Control
     {
         public delegate void EnviarVariableDelegate3();
         public event EnviarVariableDelegate3 EnviarVariableEvent3;
+        public delegate void EnviarVariableDelegate5();
+        public event EnviarVariableDelegate5 EnviarVariableEvent5;
         public ControlAcceso()
         {
             InitializeComponent();
@@ -67,9 +69,20 @@ namespace Pantalla_De_Control
                         if (usuario.Password == TxtContrasenia.Text)
                         {
                             this.Close();
-                            GlobalSettings.Instance.aceptado = true;
-                            GlobalSettings.Instance.Usuario = usuario.UsuarioName;
-                            EnviarVariableEvent3();
+                            if(GlobalSettings.Instance.BanderaPicking == true)
+                            {
+                                GlobalSettings.Instance.aceptadoP = true;
+                                GlobalSettings.Instance.Usuario = usuario.UsuarioName;
+                                EnviarVariableEvent5();
+                                GlobalSettings.Instance.BanderaPicking = false; 
+                            }
+                            else
+                            {
+                                GlobalSettings.Instance.aceptado = true;
+                                GlobalSettings.Instance.Usuario = usuario.UsuarioName;
+                                EnviarVariableEvent3();
+
+                            }
                         }
                         else
                         {

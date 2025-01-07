@@ -28,6 +28,10 @@ namespace Pantalla_De_Control
         public int identificador { get; set; }
         public int Trn { get; set; }
         public bool aceptado { get; set; }
+        public bool aceptadoP { get; set; }
+        public bool SinEfecto { get; set; }
+        public bool BanderaPicking { get; set; }
+
         public int originalWidth {  get; set; }
         public int originalHeight { get; set; }
         public Size originalSize { get; set; }

@@ -76,5 +76,20 @@ namespace Pantalla_De_Control
                 this.Close();
             }
         }
+
+        private void GridExistencia_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void MessageBoxCustom_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

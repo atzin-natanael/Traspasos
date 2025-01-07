@@ -29,6 +29,7 @@ namespace Pantalla_De_Control
         private List<string> nombresArray = new List<string>();
 
         MessageBoxCustom mensaje = new MessageBoxCustom();
+        MessageBoxCustomPicking mensajePicking = new MessageBoxCustomPicking();
 
 
         private bool isDragging = false; // Para controlar si el mouse está presionado
@@ -108,10 +109,10 @@ namespace Pantalla_De_Control
             //Objeto transaccion
             //TrnHandle
             GlobalSettings.Instance.Trn = ApiBas.NewTrn(GlobalSettings.Instance.Bd, 3);
-            //string path = "192.168.0.11:D:\\Microsip datos\\PAPELERIA CORIBA CORNEJO.fdb";
-            string path = "C:\\Microsip datos\\PAPELERIA CORIBA CORNEJO.fdb";
+            string path = "192.168.0.11:D:\\Microsip datos\\PAPELERIA CORIBA CORNEJO.fdb";
+            //string path = "C:\\Microsip datos\\PAPELERIA CORIBA CORNEJO.fdb";
 
-            int conecta = ApiBas.DBConnect(GlobalSettings.Instance.Bd, path, "SYSDBA", "masterkey");
+            int conecta = ApiBas.DBConnect(GlobalSettings.Instance.Bd, path, "SYSDBA", "C0r1b423");
             //int conecta = ApiBas.DBConnect(GlobalSettings.Instance.Bd, path, "SYSDBA", "masterkey");
             StringBuilder obtieneError = new StringBuilder(1000);
             int codigoError = ApiBas.GetLastErrorMessage(obtieneError);
@@ -360,14 +361,14 @@ namespace Pantalla_De_Control
                             break;
                         }
                     }
+                    if (incompleto)
+                        Grid.Rows[index].DefaultCellStyle.BackColor = System.Drawing.Color.LightBlue;
                     if (paquetes)
                         Grid.Rows[index].DefaultCellStyle.BackColor = System.Drawing.Color.Orchid;
                     if(No_incluido)
                             Grid.Rows[index].DefaultCellStyle.BackColor = System.Drawing.Color.Tomato;
                     if (completo)
                         Grid.Rows[index].DefaultCellStyle.BackColor = System.Drawing.Color.LightGreen;
-                    if (incompleto)
-                        Grid.Rows[index].DefaultCellStyle.BackColor = System.Drawing.Color.LightBlue;
                     if (excedente)
                         Grid.Rows[index].DefaultCellStyle.BackColor = System.Drawing.Color.Orange;
                     Grid.Rows[Grid.Rows.Count - 1].Height = 50;
@@ -461,9 +462,14 @@ namespace Pantalla_De_Control
         public void Traspaso()
         {
             DateTime fecha = DateTime.Now;
+            string des = Pedido.Text + " Realizado por: " + Cb_Surtidor.Text;
             //int ErrorFolio = ApiVe.NuevoPedido(Fecha, "IP", int.Parse(Cliente_Id), Dir_Consig_Id, Almacen_Id,"", Tipo_Desc,Descuento,"",Descripcion,Vendedor_Id, 0, 0, Moneda_Id);
-            int ErrorFolio = ApiInv.NuevaSalida(36, 108403, 108401, fecha.ToString(), "", Pedido.Text + " Realizado por: " + Cb_Surtidor.Text, 0);
-            GlobalSettings.Instance.ListaArt.Clear();
+            if (GlobalSettings.Instance.aceptadoP)
+            {
+                des = Pedido.Text + " Realizado por: " + Cb_Surtidor.Text+ "\n Autorizado por: " + GlobalSettings.Instance.Usuario;
+                GlobalSettings.Instance.aceptadoP = false;
+            }
+            int ErrorFolio = ApiInv.NuevaSalida(36, 108403, 108401, fecha.ToString(), "", des, 0);
             for (int i = 0; i < Grid.Rows.Count; ++i)
             {
                 List<string> Articulos = new List<string>();
@@ -516,7 +522,12 @@ namespace Pantalla_De_Control
                 Agregar_Pedido.BackColor = System.Drawing.Color.Black;
                 Agregar_Pedido.Enabled = true;
                 Agregar_Pedido.Text = "Agregar";
+                GlobalSettings.Instance.ListaArt.Clear();
+                GlobalSettings.Instance.aceptadoP = false;
+                GlobalSettings.Instance.aceptado = false;
                 GlobalSettings.Instance.Renglones.Clear();
+                GlobalSettings.Instance.Usuario = string.Empty;
+                GlobalSettings.Instance.SinEfecto = false;
                 Pedido.Text = string.Empty;
                 Pedido.Focus();
                 //RestoreOriginalSize();
@@ -547,24 +558,58 @@ namespace Pantalla_De_Control
                 mensajesc.Texto.Text = "Entrada con éxito"+ "\n Autorizada por: "+GlobalSettings.Instance.Usuario;
                 mensajesc.ShowDialog();
                 GlobalSettings.Instance.aceptado = false;
+                GlobalSettings.Instance.ListaArt.Clear();
                 Traspaso();
             }
         }
         public void ValidaExcel()
         {
-            for(int i = 0; i < Grid.Rows.Count; i++)
+            List<List<string>> TablaPicking = new List<List<string>>();
+            bool encontrado = false;
+            for (int i = 0; i < Grid.Rows.Count; i++)
             {
+                int art_id = Art_Id(Grid.Rows[i].Cells[1].Value.ToString());
+                decimal existencia = Existencia(art_id.ToString()); 
                 foreach (var sublista in GlobalSettings.Instance.Picking)
                 {
                     // Verificar si la sublista contiene el valor que buscas
-                    if (sublista.Contains(Grid.Rows[i].Cells[1].Value.ToString()))
+                    if (sublista.Contains(Grid.Rows[i].Cells[1].Value.ToString()) && GlobalSettings.Instance.ExistenciaAl > decimal.Parse(sublista[2]))
                     {
-                        int art_id = Art_Id(Grid.Rows[i].Cells[1].Value.ToString());
-                        decimal existencia = Existencia(art_id.ToString()); 
-                        MessageBox.Show("Este artículo no se puede surtir " + Grid.Rows[i].Cells[1].Value + "\nEstá en: "+ sublista[1] + "\nExistencia Almacén: " + existencia, "¡Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        List<string> temp = new List<string>();
+                        temp.Add(Grid.Rows[i].Cells[1].Value.ToString());
+                        temp.Add(existencia.ToString());
+                        temp.Add(GlobalSettings.Instance.ExistenciaAl.ToString());
+                        temp.Add(Grid.Rows[i].Cells[3].Value.ToString());
+                        temp.Add(sublista[1]);
+                        TablaPicking.Add(temp);
+                        encontrado = true;
                     }
                 }
-            }   
+            }
+            if (encontrado)
+            {   
+                mensajePicking.GridPicking.Rows.Clear();
+                mensajePicking.Height = 150;
+                mensajePicking.Titulo.Text = "Articulos en Picking Almacén";
+                mensajePicking.GridPicking.Height = 50;
+                for (int i = 0; i < TablaPicking.Count; i++)
+                {
+                    mensajePicking.Height += 25;
+                    mensajePicking.GridPicking.Rows.Add(TablaPicking[i][0], TablaPicking[i][1], TablaPicking[i][2], TablaPicking[i][3], TablaPicking[i][4]);
+                    mensajePicking.GridPicking.Height += 25;
+                }
+                mensajePicking.EnviarVariableEvent6 += new MessageBoxCustomPicking.EnviarVariableDelegate6(aceptado);
+                mensajePicking.ShowDialog();
+                TablaPicking.Clear();
+            }
+            if(encontrado == false)
+            {
+                GlobalSettings.Instance.SinEfecto = true;
+            }
+        }
+        public void aceptado()
+        {
+            mensajePicking.Close();
         }
         private void Generar_Click(object sender, EventArgs e)
         {
@@ -578,9 +623,13 @@ namespace Pantalla_De_Control
                 MessageBox.Show("Te falta asignar un surtidor", "¡Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            ValidaExcel();
             DialogResult result = MessageBox.Show("¿Estás seguro que deseas realizar el traspaso?\n Revisa bien las cantidades \n ¿Deseas continuar?", "Advertencia", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
             if (result == DialogResult.Cancel)
+            {
+                return;
+            }
+            ValidaExcel();
+            if(GlobalSettings.Instance.aceptadoP == false && GlobalSettings.Instance.SinEfecto == false)
             {
                 return;
             }
@@ -825,10 +874,33 @@ namespace Pantalla_De_Control
                     {
                         string Articulo_Id = reader2.GetString(3);
                         decimal Unidades = reader2.GetDecimal(4);
-                        List<string> renglon = new List<string>();
-                        renglon.Add(Articulo_Id);
-                        renglon.Add(Unidades.ToString());
-                        GlobalSettings.Instance.Renglones.Add(renglon);
+                        bool found = false; // Esta variable indica si se encontró el artículo en los renglones.
+
+                        foreach (var list in GlobalSettings.Instance.Renglones)
+                        {
+                            if (list.Contains(Articulo_Id))
+                            {
+                                // Convierte list[1] a decimal y suma el valor de Unidades
+                                decimal currentValue = decimal.Parse(list[1]);
+                                currentValue += Unidades;
+
+                                // Vuelve a asignar el valor actualizado a list[1]
+                                list[1] = currentValue.ToString();
+
+                                found = true;
+                                break; // Si se encuentra el artículo, ya no es necesario seguir buscando.
+                            }
+                        }
+
+                        // Si no se encontró el artículo en los renglones, se agrega uno nuevo
+                        if (!found)
+                        {
+                            List<string> renglon = new List<string>();
+                            renglon.Add(Articulo_Id);
+                            renglon.Add(Unidades.ToString());
+                            GlobalSettings.Instance.Renglones.Add(renglon);
+                        }
+
                     }
                     reader2.Close();
                     Agregar_Pedido.BackColor = System.Drawing.Color.SteelBlue;

@@ -105,6 +105,7 @@
             this.GridExistencia.RowHeadersVisible = false;
             this.GridExistencia.Size = new System.Drawing.Size(377, 19);
             this.GridExistencia.TabIndex = 6;
+            this.GridExistencia.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridExistencia_CellContentClick);
             // 
             // Column1
             // 
@@ -143,6 +144,7 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(468, 49);
             this.panel1.TabIndex = 7;
+            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
             // flowLayoutPanel1
             // 
@@ -170,6 +172,7 @@
             this.Name = "MessageBoxCustom";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MessageBoxCustom";
+            this.Load += new System.EventHandler(this.MessageBoxCustom_Load);
             ((System.ComponentModel.ISupportInitialize)(this.GridExistencia)).EndInit();
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
