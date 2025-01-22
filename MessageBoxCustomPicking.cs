@@ -23,6 +23,10 @@ namespace Pantalla_De_Control
         public MessageBoxCustomPicking()
         {
             InitializeComponent();
+            GridPicking.ClearSelection();
+            GridPicking.CurrentCell = null;
+            Permiso.Focus();
+            Permiso.Select();
         }
 
         private void OK_Click(object sender, EventArgs e)
@@ -51,6 +55,14 @@ namespace Pantalla_De_Control
         {
             ReleaseCapture();
             SendMessage(this.Handle, 0x112, 0xf012, 0);
+        }
+
+        private void MessageBoxCustomPicking_Load(object sender, EventArgs e)
+        {
+            GridPicking.ClearSelection();
+            GridPicking.CurrentCell = null;
+            Permiso.Focus();
+            Permiso.Select();
         }
     }
 }

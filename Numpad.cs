@@ -100,5 +100,16 @@ namespace Pantalla_De_Control
             Cantidad.Focus();
             Cantidad.Select(0, Cantidad.TextLength);
         }
+
+
+        private void Borrar_Click(object sender, EventArgs e)
+        {
+            if(Cantidad.Text != string.Empty)
+            {
+                string temp = Cantidad.Text;
+                Cantidad.Text = temp.Substring(0, temp.Length - 1);
+                Cantidad.Select(Cantidad.TextLength, 0);
+            }
+        }
     }
 }

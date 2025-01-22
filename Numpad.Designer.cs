@@ -41,6 +41,7 @@
             this.OK = new System.Windows.Forms.Button();
             this.Exit = new System.Windows.Forms.Button();
             this.N0 = new System.Windows.Forms.Button();
+            this.Borrar = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // N1
@@ -247,12 +248,25 @@
             this.N0.UseVisualStyleBackColor = false;
             this.N0.Click += new System.EventHandler(this.N0_Click);
             // 
+            // Borrar
+            // 
+            this.Borrar.BackColor = System.Drawing.Color.IndianRed;
+            this.Borrar.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.Borrar.Location = new System.Drawing.Point(185, 379);
+            this.Borrar.Name = "Borrar";
+            this.Borrar.Size = new System.Drawing.Size(100, 55);
+            this.Borrar.TabIndex = 13;
+            this.Borrar.Text = "Borrar";
+            this.Borrar.UseVisualStyleBackColor = false;
+            this.Borrar.Click += new System.EventHandler(this.Borrar_Click);
+            // 
             // Numpad
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDark;
             this.ClientSize = new System.Drawing.Size(466, 531);
+            this.Controls.Add(this.Borrar);
             this.Controls.Add(this.N0);
             this.Controls.Add(this.Exit);
             this.Controls.Add(this.OK);
@@ -293,5 +307,6 @@
         private System.Windows.Forms.Button Exit;
         private System.Windows.Forms.Button N0;
         public System.Windows.Forms.TextBox Cantidad;
+        private System.Windows.Forms.Button Borrar;
     }
 }

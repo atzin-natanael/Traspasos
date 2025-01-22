@@ -18,6 +18,10 @@ using System.Reflection;
 using System.Security.Policy;
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Office2010.ExcelAc;
+using DocumentFormat.OpenXml.Drawing.Charts;
+using System.Drawing.Printing;
+using static System.Net.Mime.MediaTypeNames;
+using DocumentFormat.OpenXml.Drawing;
 
 namespace Pantalla_De_Control
 {
@@ -44,7 +48,10 @@ namespace Pantalla_De_Control
             Pedido.Focus();
             Pedido.Select();
             CargarExcel();
-        
+            GlobalSettings.Instance.ContadorIncompletos = 0;
+            GlobalSettings.Instance.ContadorExcedentes = 0;
+
+
         }
         public void CargarExcel()
         {
@@ -338,7 +345,7 @@ namespace Pantalla_De_Control
                             Grid.Rows[i].Cells[3].Value = cantidad + ant_cant;
                         }
                     }
-                    paquetes = descripcion.Contains("C/");
+                    paquetes = GlobalSettings.Instance.Picking.Any(subLista => subLista.Count > 0 && subLista[0] == clave_principal.ToString());
                     int index = 0;
                     for(int i = 0; i< Grid.Rows.Count; i++)
                     {
@@ -358,19 +365,63 @@ namespace Pantalla_De_Control
                             Grid.ClearSelection();
                             Grid.Rows[index].Cells[0].Selected = true;
                             Grid.Rows[index].Cells[1].Selected = true;
+                            Grid.Rows[index].Cells[3].Style.Font = new Font("Arial", 18, FontStyle.Bold);
                             break;
                         }
                     }
                     if (incompleto)
-                        Grid.Rows[index].DefaultCellStyle.BackColor = System.Drawing.Color.LightBlue;
-                    if (paquetes)
-                        Grid.Rows[index].DefaultCellStyle.BackColor = System.Drawing.Color.Orchid;
-                    if(No_incluido)
+                    {
+                        if (Grid.Rows[index].DefaultCellStyle.BackColor != System.Drawing.Color.LightBlue)
+                        {
+                            Grid.Rows[index].DefaultCellStyle.BackColor = System.Drawing.Color.LightBlue;
+                            GlobalSettings.Instance.ContadorIncompletos += 1;
+                        }
+                    }
+                    if (No_incluido)
                             Grid.Rows[index].DefaultCellStyle.BackColor = System.Drawing.Color.Tomato;
                     if (completo)
-                        Grid.Rows[index].DefaultCellStyle.BackColor = System.Drawing.Color.LightGreen;
+                    {
+                        if (Grid.Rows[index].DefaultCellStyle.BackColor == System.Drawing.Color.LightBlue)
+                        {
+                            Grid.Rows[index].DefaultCellStyle.BackColor = System.Drawing.Color.LightGreen;
+                            GlobalSettings.Instance.ContadorIncompletos -= 1;
+                        }
+                        else
+                            Grid.Rows[index].DefaultCellStyle.BackColor = System.Drawing.Color.LightGreen;
+
+                    }
                     if (excedente)
-                        Grid.Rows[index].DefaultCellStyle.BackColor = System.Drawing.Color.Orange;
+                    {
+                        if (Grid.Rows[index].DefaultCellStyle.BackColor == System.Drawing.Color.LightBlue)
+                        {
+                            Grid.Rows[index].DefaultCellStyle.BackColor = System.Drawing.Color.Orange;
+                            GlobalSettings.Instance.ContadorIncompletos -= 1;
+                            GlobalSettings.Instance.ContadorExcedentes += 1;
+                        }
+                        else if (Grid.Rows[index].DefaultCellStyle.BackColor == System.Drawing.Color.LightGreen)
+                        {
+                            Grid.Rows[index].DefaultCellStyle.BackColor = System.Drawing.Color.Orange;
+                            GlobalSettings.Instance.ContadorExcedentes += 1;
+                        }
+                        else if(Grid.Rows[index].DefaultCellStyle.BackColor == System.Drawing.Color.Orange)
+                        {
+                            Grid.Rows[index].DefaultCellStyle.BackColor = System.Drawing.Color.Orange;
+                        }
+                        else
+                        {
+                            Grid.Rows[index].DefaultCellStyle.BackColor = System.Drawing.Color.Orange;
+                            GlobalSettings.Instance.ContadorExcedentes += 1;
+                        }
+                    }
+                    if (paquetes)
+                    {
+
+                        Grid.Rows[index].DefaultCellStyle.ForeColor = Color.Crimson;
+                        Grid.Rows[index].Cells[2].Style.Font = new System.Drawing.Font("Arial",13, FontStyle.Underline);
+
+                    }
+                    ContadorIncompletos.Text = GlobalSettings.Instance.ContadorIncompletos.ToString();
+                    ContadorExcedentes.Text = GlobalSettings.Instance.ContadorExcedentes.ToString();
                     Grid.Rows[Grid.Rows.Count - 1].Height = 50;
                     Codigo.Select(0, Codigo.TextLength);
                     Codigo.Focus();
@@ -461,6 +512,7 @@ namespace Pantalla_De_Control
         }
         public void Traspaso()
         {
+            GlobalSettings.Instance.ListaArt.Clear();
             DateTime fecha = DateTime.Now;
             string des = Pedido.Text + " Realizado por: " + Cb_Surtidor.Text;
             //int ErrorFolio = ApiVe.NuevoPedido(Fecha, "IP", int.Parse(Cliente_Id), Dir_Consig_Id, Almacen_Id,"", Tipo_Desc,Descuento,"",Descripcion,Vendedor_Id, 0, 0, Moneda_Id);
@@ -504,6 +556,10 @@ namespace Pantalla_De_Control
             }
             else if( final == 0)
             {
+                GlobalSettings.Instance.ContadorIncompletos = 0;
+                GlobalSettings.Instance.ContadorExcedentes = 0;
+                ContadorIncompletos.Text = "";
+                ContadorExcedentes.Text = "";
                 Mensajes mensajecu = new Mensajes();
                 mensajecu.Texto.Text = "Salida con éxito";
                 mensajecu.ShowDialog();
@@ -587,7 +643,7 @@ namespace Pantalla_De_Control
                 }
             }
             if (encontrado)
-            {   
+            {  
                 mensajePicking.GridPicking.Rows.Clear();
                 mensajePicking.Height = 150;
                 mensajePicking.Titulo.Text = "Articulos en Picking Almacén";
@@ -599,6 +655,7 @@ namespace Pantalla_De_Control
                     mensajePicking.GridPicking.Height += 25;
                 }
                 mensajePicking.EnviarVariableEvent6 += new MessageBoxCustomPicking.EnviarVariableDelegate6(aceptado);
+                mensajePicking.GridPicking.ClearSelection();
                 mensajePicking.ShowDialog();
                 TablaPicking.Clear();
             }
@@ -689,7 +746,6 @@ namespace Pantalla_De_Control
             if (e.KeyCode == Keys.Enter)
             {
                 Ingresar.Focus();
-
             }
         }
 
@@ -735,6 +791,16 @@ namespace Pantalla_De_Control
                     }
                     else
                     {
+                        if (Grid.Rows[Grid.CurrentCell.RowIndex].DefaultCellStyle.BackColor == System.Drawing.Color.LightBlue)
+                        {
+                            GlobalSettings.Instance.ContadorIncompletos -= 1;
+                            ContadorIncompletos.Text = GlobalSettings.Instance.ContadorIncompletos.ToString();  
+                        }
+                        if (Grid.Rows[Grid.CurrentCell.RowIndex].DefaultCellStyle.BackColor == System.Drawing.Color.Orange)
+                        {
+                            GlobalSettings.Instance.ContadorExcedentes -= 1;
+                            ContadorExcedentes.Text = GlobalSettings.Instance.ContadorExcedentes.ToString();
+                        }
                         Grid.Rows.RemoveAt(Grid.CurrentCell.RowIndex);
                         //Grid.CurrentCell = null;
                         Grid.ClearSelection();
@@ -776,15 +842,17 @@ namespace Pantalla_De_Control
             {
                 if (Grid.Rows[i].Cells[0].Value.ToString() == GlobalSettings.Instance.identificador.ToString())
                 {
+                    bool azul = Grid.Rows[i].DefaultCellStyle.BackColor == System.Drawing.Color.LightBlue;
+                    bool verde = Grid.Rows[i].DefaultCellStyle.BackColor == System.Drawing.Color.LightGreen;
+                    bool Naranja = Grid.Rows[i].DefaultCellStyle.BackColor == System.Drawing.Color.Orange;
                     Grid.Rows[i].Cells[3].Value = unidad;
                     int articulo_id = Art_Id(Grid.Rows[i].Cells[1].Value.ToString());
                     for (int j = 0; j < GlobalSettings.Instance.Renglones.Count; j++)
                     {
                           if (articulo_id.ToString() == GlobalSettings.Instance.Renglones[j][0].ToString())
                           {
-                                  piezas_pedido = decimal.Parse(GlobalSettings.Instance.Renglones[j][1]);
+                                  piezas_pedido += decimal.Parse(GlobalSettings.Instance.Renglones[j][1]);
                                   encontrado = true;
-                                  break;
                           }
                         
                     }
@@ -794,24 +862,62 @@ namespace Pantalla_De_Control
                     }
                     if (unidad == piezas_pedido)
                     {
-                        Grid.Rows[i].DefaultCellStyle.BackColor = System.Drawing.Color.LightGreen;
+                        if (azul)
+                        {
+                            Grid.Rows[i].DefaultCellStyle.BackColor = System.Drawing.Color.LightGreen;
+                            GlobalSettings.Instance.ContadorIncompletos -= 1;
+                        }
+                        if(Naranja)
+                        {
+                            Grid.Rows[i].DefaultCellStyle.BackColor = System.Drawing.Color.LightGreen;
+                            GlobalSettings.Instance.ContadorExcedentes -= 1;
+                        }
+                        else
+                            Grid.Rows[i].DefaultCellStyle.BackColor = System.Drawing.Color.LightGreen;
                     }
                     else if (unidad > piezas_pedido)
                     {
-                        Grid.Rows[i].DefaultCellStyle.BackColor = System.Drawing.Color.Orange;
+                        if(azul)
+                        {
+                            Grid.Rows[i].DefaultCellStyle.BackColor = System.Drawing.Color.Orange;
+                            GlobalSettings.Instance.ContadorIncompletos -= 1;
+                            GlobalSettings.Instance.ContadorExcedentes += 1;
+                        }
+                        if (verde)
+                        {
+                            Grid.Rows[i].DefaultCellStyle.BackColor = System.Drawing.Color.Orange;
+                            GlobalSettings.Instance.ContadorExcedentes += 1;
+                        }
+                        else
+                            Grid.Rows[i].DefaultCellStyle.BackColor = System.Drawing.Color.Orange;
                     }
-                    else
+                    else if (unidad < piezas_pedido)
                     {
-                        bool paquete = Grid.Rows[i].Cells[2].Value.ToString().Contains("C/");
-                        if (paquete)
-                            Grid.Rows[i].DefaultCellStyle.BackColor = System.Drawing.Color.Orchid;
+                        if (verde)
+                        {
+                            Grid.Rows[i].DefaultCellStyle.BackColor = System.Drawing.Color.LightBlue;
+                            GlobalSettings.Instance.ContadorIncompletos += 1;
+                        }
+                        if (Naranja)
+                        {
+                            Grid.Rows[i].DefaultCellStyle.BackColor = System.Drawing.Color.LightBlue;
+                            GlobalSettings.Instance.ContadorIncompletos += 1;
+                            GlobalSettings.Instance.ContadorExcedentes -= 1;
+                        }
                         else
                             Grid.Rows[i].DefaultCellStyle.BackColor = System.Drawing.Color.LightBlue;
                     }
-                    break;
+                    bool paquete = GlobalSettings.Instance.Picking.Any(subLista => subLista.Count > 0 && subLista[0] == Grid.Rows[i].Cells[1].Value.ToString());
+                    if (paquete)
+                    {
+                        Grid.Rows[i].DefaultCellStyle.ForeColor = Color.Crimson;
+                    }
 
                 }
+                    ContadorIncompletos.Text = GlobalSettings.Instance.ContadorIncompletos.ToString();
+                ContadorExcedentes.Text = GlobalSettings.Instance.ContadorExcedentes.ToString();
             }
+            
             Codigo.Focus();
             Codigo.Select(0, Codigo.Text.Length);
             //Grid.CurrentCell = null;
@@ -984,9 +1090,78 @@ namespace Pantalla_De_Control
                 }
             }
         }
+        private void SaveDocumentAsImage()
+        {
+            // Definir el tamaño de la imagen
+            int width = 600;
+            int height = 800;
+
+            // Crear una imagen en blanco con el tamaño definido
+            Bitmap bitmap = new Bitmap(width, height);
+
+            // Crear un objeto Graphics para dibujar sobre la imagen
+            using (Graphics graphics = Graphics.FromImage(bitmap))
+            {
+                graphics.Clear(Color.White);  // Limpiar la imagen con color blanco
+
+                // Aquí se renderiza el contenido que querías imprimir
+                using (Font font = new Font("Arial", 12, FontStyle.Bold))
+                {
+                    graphics.DrawString("TRASPASO A ALMACÉN", font, Brushes.Black, new PointF(40, 0));
+                }
+
+                using (Font font = new Font("Arial", 20, FontStyle.Bold))
+                {
+                    graphics.DrawString(Pedido.Text, font, Brushes.Black, new PointF(90, 50));
+                }
+
+                using (Font font = new Font("Arial", 10, FontStyle.Bold))
+                {
+                    graphics.DrawString(DateTime.Now.ToString(" yyyy-MM-dd HH:mm"), font, Brushes.Black, new PointF(160, 20));
+                }
+
+                System.Drawing.Image originalImage = System.Drawing.Image.FromFile("C:\\Img\\logo.jpg");
+                System.Drawing.Image resizedImage = new Bitmap(originalImage, new System.Drawing.Size(50, 30));
+                graphics.DrawImage(resizedImage, new PointF(0, 40));
+
+                int j = 90;
+                for (int i = 0; i < GlobalSettings.Instance.ListaArt.Count; ++i)
+                {
+                    using (Font font = new Font("Arial", 10, FontStyle.Bold))
+                    {
+                        if (i > 0)
+                            graphics.DrawString("_____________________________________________________________", font, Brushes.Black, new PointF(0, j - 25));
+                        graphics.DrawString(GlobalSettings.Instance.ListaArt[i][0], font, Brushes.Black, new PointF(0, j));
+                        if (GlobalSettings.Instance.ListaArt[i][2].ToString().Length > 3)
+                            graphics.DrawString(GlobalSettings.Instance.ListaArt[i][2].ToString(), font, Brushes.Black, new PointF(252, j));
+                        else
+                            graphics.DrawString(GlobalSettings.Instance.ListaArt[i][2].ToString(), font, Brushes.Black, new PointF(260, j));
+                    }
+
+                    System.Drawing.Rectangle DestinationRectangle = new System.Drawing.Rectangle(51, j, 220, 50);
+                    using (StringFormat sf = new StringFormat())
+                    {
+                        graphics.DrawString(GlobalSettings.Instance.ListaArt[i][1], new Font("Arial", 8, FontStyle.Regular), Brushes.Black, DestinationRectangle, sf);
+                    }
+
+                    j += 50;
+                }
+
+                using (Font font = new Font("Arial", 10, FontStyle.Bold))
+                {
+                    graphics.DrawString("                      ___________  ", font, Brushes.Black, new PointF(0, j + 50));
+                    graphics.DrawString("                        Recibió    ", font, Brushes.Black, new PointF(0, j + 70));
+                    graphics.DrawString("Hecho por: " + Cb_Surtidor.Text, font, Brushes.Black, new PointF(0, j + 90));
+                }
+            }
+
+            // Guardar la imagen como un archivo (por ejemplo, en formato PNG)
+            bitmap.Save("C:\\Traspasos\\"+Pedido.Text+".png", System.Drawing.Imaging.ImageFormat.Png);
+        }
 
         private void printDocument1_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
         {
+            SaveDocumentAsImage();
             using (Font font = new Font("Arial", 12, FontStyle.Bold))
             {
                 e.Graphics.DrawString("TRASPASO A ALMACÉN", font, Brushes.Black, new PointF(40,0));
@@ -999,11 +1174,11 @@ namespace Pantalla_De_Control
             }
             using (Font font = new Font("Arial", 10, FontStyle.Bold))
             {
-                e.Graphics.DrawString(DateTime.Now.ToString(" yyyy-MM-dd"), font, Brushes.Black, new PointF(200, 40));
+                e.Graphics.DrawString(DateTime.Now.ToString(" yyyy-MM-dd HH:mm"), font, Brushes.Black, new PointF(160, 20));
 
             }
-            Image originalImage = Image.FromFile("C:\\Img\\logo.jpg");
-            Image resizedImage = new Bitmap(originalImage, new Size(50, 30));
+            System.Drawing.Image originalImage = System.Drawing.Image.FromFile("C:\\Img\\logo.jpg");
+            System.Drawing.Image resizedImage = new Bitmap(originalImage, new System.Drawing.Size(50, 30));
             e.Graphics.DrawImage(resizedImage, new PointF(0, 40));
             int j = 90;
             for (int i = 0; i < GlobalSettings.Instance.ListaArt.Count; ++i)
@@ -1020,7 +1195,7 @@ namespace Pantalla_De_Control
 
                 }
 
-                Rectangle DestinationRectangle = new Rectangle(51, j, 220, 50);
+                System.Drawing.Rectangle DestinationRectangle = new System.Drawing.Rectangle(51, j, 220, 50);
                 using (StringFormat sf = new StringFormat())
                 {
                     e.Graphics.DrawString(GlobalSettings.Instance.ListaArt[i][1], new Font("Arial", 8, FontStyle.Regular), Brushes.Black, DestinationRectangle, sf);
@@ -1035,6 +1210,37 @@ namespace Pantalla_De_Control
                 e.Graphics.DrawString("Hecho por: "+Cb_Surtidor.Text, font, Brushes.Black, new PointF(0, j + 90));
 
             }
+        }
+
+
+
+        
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            if(Pedido.Text != string.Empty)
+            {
+                string file = "C:\\Traspasos\\" + Pedido.Text + ".png";
+                if (File.Exists(file))
+                {
+                    GlobalSettings.Instance.ticket = System.Drawing.Image.FromFile(file);
+                    printDocument2.Print();
+                }
+                else
+                {
+                    MessageBox.Show("El pedido no existe.","Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Primero ingresa un pedido","Error",MessageBoxButtons.OK,MessageBoxIcon.Stop);
+                return;
+            }
+        }
+
+        private void printDocument2_PrintPage(object sender, PrintPageEventArgs e)
+        {
+            e.Graphics.DrawImage(GlobalSettings.Instance.ticket, 0, 0);
         }
     }
 }

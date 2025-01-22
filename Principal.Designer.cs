@@ -28,15 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Principal));
             this.Grid = new System.Windows.Forms.DataGridView();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column5 = new System.Windows.Forms.DataGridViewImageColumn();
             this.Ingresar = new System.Windows.Forms.Button();
             this.Generar = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
@@ -63,8 +61,24 @@
             this.printDocument1 = new System.Drawing.Printing.PrintDocument();
             this.printDialog1 = new System.Windows.Forms.PrintDialog();
             this.label11 = new System.Windows.Forms.Label();
+            this.ContadorIncompletos = new System.Windows.Forms.Label();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.panel8 = new System.Windows.Forms.Panel();
+            this.ContadorExcedentes = new System.Windows.Forms.Label();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.printDocument2 = new System.Drawing.Printing.PrintDocument();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column5 = new System.Windows.Forms.DataGridViewImageColumn();
             ((System.ComponentModel.ISupportInitialize)(this.Grid)).BeginInit();
             this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.panel7.SuspendLayout();
+            this.panel8.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // Grid
@@ -78,14 +92,14 @@
             this.Grid.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.Grid.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SunkenHorizontal;
             this.Grid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle11.BackColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.Grid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle9.BackColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.Grid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle9;
             this.Grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Grid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
@@ -108,45 +122,6 @@
             this.Grid.TabIndex = 22;
             this.Grid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Grid_CellClick);
             this.Grid.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Grid_KeyDown);
-            // 
-            // Column1
-            // 
-            this.Column1.HeaderText = "Id";
-            this.Column1.Name = "Column1";
-            this.Column1.ReadOnly = true;
-            this.Column1.Width = 40;
-            // 
-            // Column2
-            // 
-            this.Column2.HeaderText = "Código";
-            this.Column2.MinimumWidth = 70;
-            this.Column2.Name = "Column2";
-            this.Column2.ReadOnly = true;
-            this.Column2.Width = 70;
-            // 
-            // Column3
-            // 
-            this.Column3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Column3.HeaderText = "Descripción";
-            this.Column3.Name = "Column3";
-            this.Column3.ReadOnly = true;
-            // 
-            // Column4
-            // 
-            this.Column4.HeaderText = "Unidades";
-            this.Column4.Name = "Column4";
-            this.Column4.ReadOnly = true;
-            // 
-            // Column5
-            // 
-            this.Column5.HeaderText = "";
-            this.Column5.Image = ((System.Drawing.Image)(resources.GetObject("Column5.Image")));
-            this.Column5.Name = "Column5";
-            this.Column5.ReadOnly = true;
-            this.Column5.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Column5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Column5.ToolTipText = "Borrar";
-            this.Column5.Width = 50;
             // 
             // Ingresar
             // 
@@ -265,33 +240,36 @@
             // panel2
             // 
             this.panel2.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.panel2.BackColor = System.Drawing.Color.Orchid;
+            this.panel2.BackColor = System.Drawing.Color.White;
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Enabled = false;
+            this.panel2.Controls.Add(this.label5);
+            this.panel2.ForeColor = System.Drawing.Color.Red;
             this.panel2.Location = new System.Drawing.Point(849, 212);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(35, 24);
+            this.panel2.Size = new System.Drawing.Size(140, 33);
             this.panel2.TabIndex = 26;
             // 
             // label5
             // 
-            this.label5.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.label5.AutoSize = true;
-            this.label5.Enabled = false;
-            this.label5.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.ForeColor = System.Drawing.SystemColors.HotTrack;
-            this.label5.Location = new System.Drawing.Point(890, 212);
+            this.label5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.label5.Font = new System.Drawing.Font("Arial", 14.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.ForeColor = System.Drawing.Color.Red;
+            this.label5.Location = new System.Drawing.Point(31, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(86, 22);
+            this.label5.Size = new System.Drawing.Size(79, 22);
             this.label5.TabIndex = 27;
-            this.label5.Text = "Paquete";
+            this.label5.Text = "Picking";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panel3
             // 
             this.panel3.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.panel3.BackColor = System.Drawing.Color.LightBlue;
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel3.Enabled = false;
             this.panel3.Location = new System.Drawing.Point(849, 265);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(35, 24);
@@ -301,7 +279,6 @@
             // 
             this.label6.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label6.AutoSize = true;
-            this.label6.Enabled = false;
             this.label6.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.ForeColor = System.Drawing.SystemColors.HotTrack;
             this.label6.Location = new System.Drawing.Point(890, 265);
@@ -315,7 +292,6 @@
             this.panel4.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.panel4.BackColor = System.Drawing.Color.Tomato;
             this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel4.Enabled = false;
             this.panel4.Location = new System.Drawing.Point(849, 462);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(35, 24);
@@ -324,7 +300,6 @@
             // label7
             // 
             this.label7.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.label7.Enabled = false;
             this.label7.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.ForeColor = System.Drawing.SystemColors.HotTrack;
             this.label7.Location = new System.Drawing.Point(890, 442);
@@ -338,7 +313,6 @@
             this.panel5.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.panel5.BackColor = System.Drawing.Color.Orange;
             this.panel5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel5.Enabled = false;
             this.panel5.Location = new System.Drawing.Point(849, 391);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(35, 24);
@@ -348,7 +322,6 @@
             // 
             this.label8.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label8.AutoSize = true;
-            this.label8.Enabled = false;
             this.label8.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.ForeColor = System.Drawing.SystemColors.HotTrack;
             this.label8.Location = new System.Drawing.Point(890, 391);
@@ -375,6 +348,7 @@
             this.Pedido.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.Pedido.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Pedido.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.Pedido.ContextMenuStrip = this.contextMenuStrip1;
             this.Pedido.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Pedido.Location = new System.Drawing.Point(116, 51);
             this.Pedido.Name = "Pedido";
@@ -403,7 +377,6 @@
             // 
             this.label10.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label10.AutoSize = true;
-            this.label10.Enabled = false;
             this.label10.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label10.ForeColor = System.Drawing.SystemColors.HotTrack;
             this.label10.Location = new System.Drawing.Point(890, 329);
@@ -417,7 +390,6 @@
             this.panel6.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.panel6.BackColor = System.Drawing.Color.LightGreen;
             this.panel6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel6.Enabled = false;
             this.panel6.Location = new System.Drawing.Point(849, 329);
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(35, 24);
@@ -453,9 +425,120 @@
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(897, 17);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(87, 18);
+            this.label11.Size = new System.Drawing.Size(100, 18);
             this.label11.TabIndex = 37;
-            this.label11.Text = "Versión 1.7";
+            this.label11.Text = "Versión 2.1.1";
+            // 
+            // ContadorIncompletos
+            // 
+            this.ContadorIncompletos.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.ContadorIncompletos.AutoSize = true;
+            this.ContadorIncompletos.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ContadorIncompletos.Font = new System.Drawing.Font("Arial", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ContadorIncompletos.Location = new System.Drawing.Point(34, 0);
+            this.ContadorIncompletos.Name = "ContadorIncompletos";
+            this.ContadorIncompletos.Size = new System.Drawing.Size(0, 37);
+            this.ContadorIncompletos.TabIndex = 38;
+            this.ContadorIncompletos.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // panel7
+            // 
+            this.panel7.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.panel7.BackColor = System.Drawing.Color.LightBlue;
+            this.panel7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel7.Controls.Add(this.ContadorIncompletos);
+            this.panel7.Location = new System.Drawing.Point(467, 76);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(103, 51);
+            this.panel7.TabIndex = 39;
+            // 
+            // panel8
+            // 
+            this.panel8.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.panel8.BackColor = System.Drawing.Color.Orange;
+            this.panel8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel8.Controls.Add(this.ContadorExcedentes);
+            this.panel8.Location = new System.Drawing.Point(618, 76);
+            this.panel8.Name = "panel8";
+            this.panel8.Size = new System.Drawing.Size(103, 51);
+            this.panel8.TabIndex = 40;
+            // 
+            // ContadorExcedentes
+            // 
+            this.ContadorExcedentes.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.ContadorExcedentes.AutoSize = true;
+            this.ContadorExcedentes.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ContadorExcedentes.Font = new System.Drawing.Font("Arial", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ContadorExcedentes.Location = new System.Drawing.Point(31, 0);
+            this.ContadorExcedentes.Name = "ContadorExcedentes";
+            this.ContadorExcedentes.Size = new System.Drawing.Size(0, 37);
+            this.ContadorExcedentes.TabIndex = 39;
+            this.ContadorExcedentes.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem1});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(168, 26);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.toolStripMenuItem1.ForeColor = System.Drawing.SystemColors.Control;
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(167, 22);
+            this.toolStripMenuItem1.Text = "Reimprimir Ticket";
+            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
+            // 
+            // printDocument2
+            // 
+            this.printDocument2.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(this.printDocument2_PrintPage);
+            // 
+            // Column1
+            // 
+            this.Column1.HeaderText = "Id";
+            this.Column1.Name = "Column1";
+            this.Column1.ReadOnly = true;
+            this.Column1.Width = 40;
+            // 
+            // Column2
+            // 
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column2.DefaultCellStyle = dataGridViewCellStyle10;
+            this.Column2.HeaderText = "Código";
+            this.Column2.MinimumWidth = 70;
+            this.Column2.Name = "Column2";
+            this.Column2.ReadOnly = true;
+            this.Column2.Width = 70;
+            // 
+            // Column3
+            // 
+            this.Column3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Column3.HeaderText = "Descripción";
+            this.Column3.Name = "Column3";
+            this.Column3.ReadOnly = true;
+            // 
+            // Column4
+            // 
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column4.DefaultCellStyle = dataGridViewCellStyle11;
+            this.Column4.HeaderText = "Unidades";
+            this.Column4.MinimumWidth = 90;
+            this.Column4.Name = "Column4";
+            this.Column4.ReadOnly = true;
+            this.Column4.Width = 90;
+            // 
+            // Column5
+            // 
+            this.Column5.HeaderText = "";
+            this.Column5.Image = ((System.Drawing.Image)(resources.GetObject("Column5.Image")));
+            this.Column5.Name = "Column5";
+            this.Column5.ReadOnly = true;
+            this.Column5.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Column5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Column5.ToolTipText = "Borrar";
+            this.Column5.Width = 50;
             // 
             // Principal
             // 
@@ -464,6 +547,8 @@
             this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1008, 729);
+            this.Controls.Add(this.panel8);
+            this.Controls.Add(this.panel7);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.SinCodigo);
             this.Controls.Add(this.label10);
@@ -477,7 +562,6 @@
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.panel3);
-            this.Controls.Add(this.label5);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.Cb_Surtidor);
             this.Controls.Add(this.label4);
@@ -502,6 +586,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.Grid)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
+            this.panel7.ResumeLayout(false);
+            this.panel7.PerformLayout();
+            this.panel8.ResumeLayout(false);
+            this.panel8.PerformLayout();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -522,11 +613,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
-        private System.Windows.Forms.DataGridViewImageColumn Column5;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Panel panel5;
@@ -541,6 +627,18 @@
         private System.Drawing.Printing.PrintDocument printDocument1;
         private System.Windows.Forms.PrintDialog printDialog1;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label ContadorIncompletos;
+        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.Panel panel8;
+        private System.Windows.Forms.Label ContadorExcedentes;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Drawing.Printing.PrintDocument printDocument2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
+        private System.Windows.Forms.DataGridViewImageColumn Column5;
     }
 }
 

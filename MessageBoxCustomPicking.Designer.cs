@@ -28,18 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.Permiso = new System.Windows.Forms.Button();
             this.OK = new System.Windows.Forms.Button();
             this.GridPicking = new System.Windows.Forms.DataGridView();
-            this.Titulo = new System.Windows.Forms.Label();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Titulo = new System.Windows.Forms.Label();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.GridPicking)).BeginInit();
             this.SuspendLayout();
@@ -62,7 +63,7 @@
             this.panel2.Location = new System.Drawing.Point(0, 141);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(518, 39);
-            this.panel2.TabIndex = 1;
+            this.panel2.TabIndex = 0;
             // 
             // Permiso
             // 
@@ -74,7 +75,7 @@
             this.Permiso.Location = new System.Drawing.Point(55, 4);
             this.Permiso.Name = "Permiso";
             this.Permiso.Size = new System.Drawing.Size(140, 31);
-            this.Permiso.TabIndex = 6;
+            this.Permiso.TabIndex = 1;
             this.Permiso.Text = "Solicitar permiso";
             this.Permiso.UseVisualStyleBackColor = false;
             this.Permiso.Click += new System.EventHandler(this.Permiso_Click);
@@ -89,7 +90,7 @@
             this.OK.Location = new System.Drawing.Point(328, 4);
             this.OK.Name = "OK";
             this.OK.Size = new System.Drawing.Size(140, 31);
-            this.OK.TabIndex = 7;
+            this.OK.TabIndex = 2;
             this.OK.Text = "Volver";
             this.OK.UseVisualStyleBackColor = false;
             this.OK.Click += new System.EventHandler(this.OK_Click);
@@ -105,14 +106,14 @@
             this.GridPicking.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(150)))), ((int)(((byte)(150)))));
             this.GridPicking.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.GridPicking.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.GridPicking.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.GridPicking.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.GridPicking.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.GridPicking.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
@@ -120,24 +121,22 @@
             this.Column2,
             this.Column3,
             this.Column4});
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.ControlLightLight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.Desktop;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.GridPicking.DefaultCellStyle = dataGridViewCellStyle2;
+            this.GridPicking.Enabled = false;
             this.GridPicking.GridColor = System.Drawing.SystemColors.Control;
             this.GridPicking.Location = new System.Drawing.Point(16, 65);
             this.GridPicking.Name = "GridPicking";
             this.GridPicking.ReadOnly = true;
             this.GridPicking.RowHeadersVisible = false;
             this.GridPicking.Size = new System.Drawing.Size(490, 30);
-            this.GridPicking.TabIndex = 7;
-            // 
-            // Titulo
-            // 
-            this.Titulo.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.Titulo.AutoSize = true;
-            this.Titulo.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Titulo.ForeColor = System.Drawing.Color.Black;
-            this.Titulo.Location = new System.Drawing.Point(141, 34);
-            this.Titulo.Name = "Titulo";
-            this.Titulo.Size = new System.Drawing.Size(0, 19);
-            this.Titulo.TabIndex = 8;
+            this.GridPicking.TabIndex = 0;
             // 
             // Column1
             // 
@@ -172,6 +171,17 @@
             this.Column4.Name = "Column4";
             this.Column4.ReadOnly = true;
             // 
+            // Titulo
+            // 
+            this.Titulo.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.Titulo.AutoSize = true;
+            this.Titulo.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Titulo.ForeColor = System.Drawing.Color.Black;
+            this.Titulo.Location = new System.Drawing.Point(141, 34);
+            this.Titulo.Name = "Titulo";
+            this.Titulo.Size = new System.Drawing.Size(0, 19);
+            this.Titulo.TabIndex = 0;
+            // 
             // MessageBoxCustomPicking
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -186,6 +196,7 @@
             this.Name = "MessageBoxCustomPicking";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MessageBoxCustomPicking";
+            this.Load += new System.EventHandler(this.MessageBoxCustomPicking_Load);
             this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.GridPicking)).EndInit();
             this.ResumeLayout(false);
@@ -197,7 +208,6 @@
 
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Button Permiso;
         private System.Windows.Forms.Button OK;
         public System.Windows.Forms.DataGridView GridPicking;
         public System.Windows.Forms.Label Titulo;
@@ -206,5 +216,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
+        public System.Windows.Forms.Button Permiso;
     }
 }
